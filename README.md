@@ -1,5 +1,4 @@
 G.O.D: Grand Object-bound Dispatcher
-
 ==========
 
 G.O.D is a high performance non-blocking task dispatcher which guarantees class member functions' execution sequence 
@@ -25,7 +24,7 @@ public:
 
 	void TestFunc(double a, int b)
 	{
-	  // ...
+	  // do something...
 	}
 }
 
