@@ -1,10 +1,12 @@
 G.O.D: Grand Object-bound Dispatcher
+
 ==========
+
 G.O.D is a high performance non-blocking task dispatcher which guarantees class member functions' execution sequence 
 
-## Features
+## FEATURES
 * Designed for multi-platform by using C++11 standard
-** Visual Studio Solutions for now, but you can easily use in *NIX environment (Just #include relevant files)
+ * Visual Studio Solutions for now, but you can easily use in *NIX environment (Just #include relevant files)
 * Wait-free algorithms
 * Simple code-base for easy to understand (easy to adapt to other projects)
 
@@ -15,7 +17,7 @@ G.O.D is a high performance non-blocking task dispatcher which guarantees class 
 // IMPORTANT: the beginning of a workerthread, you should put this:
 LExecuterList = new std::deque<AsyncExecutable*>;
 
-// And then you can attach dispatcher(AsyncExecutable)to an object like this:
+// And then you can attach G.O.D (AsyncExecutable) to an object like this:
 class TestObject : public AsyncExecutable
 {
 {
