@@ -38,8 +38,8 @@ For more information, just see self-explaning [DispatcherTest.cpp](JobDispatcher
 
 ## WARNING!
 
-1. you should use x64 mode due to std::atomic variable alignment
-2. you should guarantee the lifetime (i.e. refcount > 0) of an object inherited from AsyncExecutable
-3. be careful! when using blockable LOCKs in an async job... (which can cause deadlock.. )
+1. You should use x64 mode due to std::atomic variable alignment
+2. You should guarantee the lifetime (i.e. refcount > 0) of an object inherited from AsyncExecutable
+3. Be careful to use blockable (explicit) LOCKs in a member function executed by G.O.D. It can cause deadlock...
 
 
