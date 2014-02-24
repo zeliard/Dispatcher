@@ -1,11 +1,15 @@
-Dispatcher
+G.O.D: Grand Object-bound Dispatcher
 ==========
+G.O.D is a high performance non-blocking task dispatcher which guarantees class member functions' execution sequence 
 
-High Performance Non-blocking Task(Job) Dispatcher (C++ 11 standard, multi-platform)
+## Features
+* Designed for multi-platform by using C++11 standard
+** Visual Studio Solutions for now, but you can easily use in *NIX environment (Just #include relevant files)
+* Wait-free algorithms
+* Simple code-base for easy to understand (easy to adapt to other projects)
 
 
 ## HOW TO USE
-self-explaning DispatcherTest.cpp 
 
 ```C++
 // IMPORTANT: the beginning of a workerthread, you should put this:
@@ -28,6 +32,8 @@ TestObject* testobj = new TestObject;
 testobject->DoAsync(&TestObject::TestFunc, 100.123, 456);
 
 ```
+
+For more information, just see self-explaning [DispatcherTest.cpp](JobDispatcher/DispatcherTest.cpp)  
 
 ## WARNING!
 
