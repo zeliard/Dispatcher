@@ -19,17 +19,19 @@ LExecuterList = new std::deque<AsyncExecutable*>;
 // And then you can attach G.O.D (AsyncExecutable) to an object like this:
 class TestObject : public AsyncExecutable
 {
-{
 public:
 
 	void TestFunc(double a, int b)
 	{
 	  // do something...
 	}
-}
+	
+	// ... ...
+};
 
 // Now, you can call a member function like this:
 TestObject* testobj = new TestObject;
+// ... ...
 testobject->DoAsync(&TestObject::TestFunc, 100.123, 456);
 
 ```
