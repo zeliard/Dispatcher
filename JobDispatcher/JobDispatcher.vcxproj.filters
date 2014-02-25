@@ -5,7 +5,7 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Utils">
+    <Filter Include="G.O.D">
       <UniqueIdentifier>{0bfdc06c-8390-4001-b7b7-2df0e69e7d83}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -20,13 +20,13 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Job.h">
-      <Filter>Utils</Filter>
+      <Filter>G.O.D</Filter>
     </ClInclude>
     <ClInclude Include="JobDispatcher.h">
-      <Filter>Utils</Filter>
+      <Filter>G.O.D</Filter>
     </ClInclude>
     <ClInclude Include="ObjectPool.h">
-      <Filter>Utils</Filter>
+      <Filter>G.O.D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -34,7 +34,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="JobDispatcher.cpp">
-      <Filter>Utils</Filter>
+      <Filter>G.O.D</Filter>
     </ClCompile>
     <ClCompile Include="DispatcherTest.cpp">
       <Filter>Source Files</Filter>
