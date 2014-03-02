@@ -71,3 +71,7 @@ struct Job : public JobEntry, ObjectPool<Job<ObjType, ArgTypes...>>
 	MemFunc_	mMemFunc;
 	Args_		mArgs;
 };
+
+#ifdef WIN32
+#define thread_local __declspec(thread)
+#endif

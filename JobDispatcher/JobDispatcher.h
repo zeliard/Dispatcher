@@ -5,6 +5,7 @@
 #include <inttypes.h>
 
 #include "Job.h"
+#include "Timer.h"
 
 class JobQueue
 {
@@ -89,10 +90,6 @@ private:
 
 class AsyncExecutable;
 
-#ifdef WIN32
-#define thread_local __declspec(thread)
-#endif
-
 thread_local extern std::deque<AsyncExecutable*>* LExecuterList;
 thread_local extern AsyncExecutable*	LCurrentExecuterOccupyingThisThread;
 
@@ -114,6 +111,13 @@ public:
 		Job<T, Args...>* job = new Job<T, Args...>(static_cast<T*>(this), memfunc, args...); 
 		DoTask(job); 
 	} 
+
+	template <class T, class... Args>
+	void DoAsyncAfter(uint32_t after, void (T::*memfunc)(Args...), Args... args)
+	{
+		Job<T, Args...>* job = new Job<T, Args...>(static_cast<T*>(this), memfunc, args...);
+		LTimer->PushTimerJob(this, after, job);
+	}
 
 	void AddRefForThis()
 	{
@@ -187,7 +191,6 @@ private:
 		}
 	}
 
-
 private:
 	/// member variables
 	JobQueue	mJobQueue;
@@ -197,6 +200,7 @@ private:
 	/// should not release this object when it is in the dispatcher
 	std::atomic<int32_t> mRefCount;
 
+	friend class Timer;
 };
 
 

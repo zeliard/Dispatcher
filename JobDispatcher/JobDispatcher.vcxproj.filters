@@ -28,6 +28,9 @@
     <ClInclude Include="ObjectPool.h">
       <Filter>G.O.D</Filter>
     </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>G.O.D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -38,6 +41,9 @@
     </ClCompile>
     <ClCompile Include="DispatcherTest.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>G.O.D</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

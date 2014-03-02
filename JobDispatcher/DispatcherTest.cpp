@@ -35,6 +35,11 @@ public:
 		//printf("[%d] TestFunc2 %f\n", mTestCount, a + b);
 	}
 
+	void TestFuncForTimer(int b)
+	{
+		printf("TestFuncForTimer [%d] \n", b);
+	}
+
 
 	int GetTestCount() { return mTestCount; }
 private:
@@ -48,6 +53,7 @@ TestObject* GTestObject[TEST_OBJECT_COUNT] = { 0, };
 void TestWorkerThread(int tid)
 {
 	LExecuterList = new std::deque<AsyncExecutable*>;
+	LTimer = new Timer;
 
 	for (int i = 0; i < 100000; ++i)
 	{
@@ -56,14 +62,19 @@ void TestWorkerThread(int tid)
 		GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsync(&TestObject::TestFunc1, 100);
 	}
 
+	GTestObject[tid-1]->DoAsyncAfter(1000, &TestObject::TestFuncForTimer, 337);
+	LTimer->DoTimerJob();
+
+	delete LTimer;
 	delete LExecuterList;
 }
 
 
 
-
 int _tmain(int argc, _TCHAR* argv[])
 {
+
+	auto now = Clock::now();
 
 	for (int i = 0; i < TEST_OBJECT_COUNT; ++i)
 		GTestObject[i] = new TestObject;
@@ -75,7 +86,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		threadList.push_back(std::thread(TestWorkerThread, i+1));
 	}
 
-	
+
 	for (auto& thread : threadList)
 	{
 		if (thread.joinable())
@@ -90,10 +101,19 @@ int _tmain(int argc, _TCHAR* argv[])
 	printf("TOTAL %d\n", total);
 
 
+	{
+		auto elapsed = Clock::now() - now;
+		auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();
+
+		printf("elapsed: %d\n", millis);
+		
+	}
+
 	getchar();
 
 	for (int i = 0; i < TEST_OBJECT_COUNT; ++i)
 		delete GTestObject[i];
+
 
 	return 0;
 }
