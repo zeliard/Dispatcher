@@ -2,6 +2,7 @@
 
 #include <deque>
 #include <atomic>
+#include <thread>
 #include <inttypes.h>
 
 #include "Job.h"

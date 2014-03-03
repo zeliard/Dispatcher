@@ -54,16 +54,24 @@ void TestWorkerThread(int tid)
 {
 	LExecuterList = new std::deque<AsyncExecutable*>;
 	LTimer = new Timer;
-
-	for (int i = 0; i < 100000; ++i)
+	
+	int i = 0;
+	while (true)
 	{
-		GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsync(&TestObject::TestFunc0);
-		GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsync(&TestObject::TestFunc2, double(tid) * 100, i);
-		GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsync(&TestObject::TestFunc1, 100);
+		//GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsync(&TestObject::TestFunc0);
+		//GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsync(&TestObject::TestFunc2, double(tid) * 100, i);
+		//GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsync(&TestObject::TestFunc1, 100);
+
+		if (i++ < 30)
+		{
+			uint32_t after = rand() % 2000;
+			GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsyncAfter(after, &TestObject::TestFuncForTimer, (int)after);
+		}
+
+	
+		LTimer->DoTimerJob();
 	}
 
-	GTestObject[tid-1]->DoAsyncAfter(1000, &TestObject::TestFuncForTimer, 337);
-	LTimer->DoTimerJob();
 
 	delete LTimer;
 	delete LExecuterList;
@@ -73,8 +81,6 @@ void TestWorkerThread(int tid)
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-
-	auto now = Clock::now();
 
 	for (int i = 0; i < TEST_OBJECT_COUNT; ++i)
 		GTestObject[i] = new TestObject;
@@ -100,14 +106,6 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	printf("TOTAL %d\n", total);
 
-
-	{
-		auto elapsed = Clock::now() - now;
-		auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();
-
-		printf("elapsed: %d\n", millis);
-		
-	}
 
 	getchar();
 
