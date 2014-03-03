@@ -7,6 +7,7 @@ G.O.D is a high performance non-blocking task dispatcher which guarantees class 
 * Designed for multi-platform by using C++11 standard
  * Visual Studio Solutions for now, but you can easily use in *NIX environment (Just #include relevant files)
 * Wait-free algorithms
+* Deferred task execution using Timer
 * Simple code-base for easy to understand (easy to adapt to other projects)
 
 
@@ -15,6 +16,10 @@ G.O.D is a high performance non-blocking task dispatcher which guarantees class 
 ```C++
 // IMPORTANT: the beginning of a workerthread, you should put this:
 LExecuterList = new std::deque<AsyncExecutable*>;
+LTimer = new Timer;
+
+// after that, in the loop of the workerthread, put this:
+LTimer->DoTimerJob();
 
 // And then you can attach G.O.D (AsyncExecutable) to an object like this:
 class TestObject : public AsyncExecutable
@@ -34,6 +39,8 @@ TestObject* testobj = new TestObject;
 // ... ...
 testobject->DoAsync(&TestObject::TestFunc, 100.123, 456);
 
+// or, deferred execution 1000ms later like this:
+testobject->DoAsyncAfter(1000, &TestObject::TestFunc, 100.123, 456);
 ```
 
 For more information, just see self-explaning [DispatcherTest.cpp](JobDispatcher/DispatcherTest.cpp)  
