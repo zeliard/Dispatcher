@@ -28,6 +28,9 @@ void Timer::PushTimerJob(AsyncExecutable* obj, uint32_t after, JobEntry* task)
 
 void Timer::DoTimerJob()
 {
+	/// thread tick update
+	LTickCount = GetCurrentTick();
+
 	while ( !mTimerJobQueue.empty() )
 	{
 		TimerJobElement& timerJobElem = mTimerJobQueue.top();
@@ -40,9 +43,6 @@ void Timer::DoTimerJob()
 
 		mTimerJobQueue.pop();
 	}
-
-	/// thread tick update
-	LTickCount = GetCurrentTick();
 
 	/// optional: for the low cpu-utilization
 	std::this_thread::sleep_for(std::chrono::milliseconds(1));
