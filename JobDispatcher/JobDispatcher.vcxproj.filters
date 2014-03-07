@@ -31,18 +31,27 @@
     <ClInclude Include="Timer.h">
       <Filter>G.O.D</Filter>
     </ClInclude>
+    <ClInclude Include="STLAllocator.h">
+      <Filter>G.O.D</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadLocal.h">
+      <Filter>G.O.D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="JobDispatcher.cpp">
-      <Filter>G.O.D</Filter>
-    </ClCompile>
     <ClCompile Include="DispatcherTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Timer.cpp">
+      <Filter>G.O.D</Filter>
+    </ClCompile>
+    <ClCompile Include="STLAllocator.cpp">
+      <Filter>G.O.D</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadLocal.cpp">
       <Filter>G.O.D</Filter>
     </ClCompile>
   </ItemGroup>

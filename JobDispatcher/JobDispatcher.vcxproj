@@ -147,15 +147,22 @@
     <ClInclude Include="JobDispatcher.h" />
     <ClInclude Include="ObjectPool.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="STLAllocator.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="ThreadLocal.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="JobDispatcher.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="DispatcherTest.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="STLAllocator.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="ThreadLocal.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Timer.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>

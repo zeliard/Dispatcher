@@ -1,12 +1,12 @@
 #pragma once
 
-#include <deque>
 #include <atomic>
 #include <thread>
-#include <inttypes.h>
 
+#include "STLAllocator.h"
 #include "Job.h"
 #include "Timer.h"
+#include "ThreadLocal.h"
 
 class JobQueue
 {
@@ -88,11 +88,6 @@ private:
 
 };
 
-
-class AsyncExecutable;
-
-thread_local extern std::deque<AsyncExecutable*>* LExecuterList;
-thread_local extern AsyncExecutable*	LCurrentExecuterOccupyingThisThread;
 
 
 class AsyncExecutable

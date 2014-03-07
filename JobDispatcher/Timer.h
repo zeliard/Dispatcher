@@ -3,6 +3,7 @@
 #include <chrono>
 #include <vector>
 #include <queue>
+#include "STLAllocator.h"
 #include "Job.h"
 
 
@@ -28,7 +29,7 @@ struct TimerJobComparator
 };
 
 
-typedef std::priority_queue<TimerJobElement, std::vector<TimerJobElement>, TimerJobComparator> TimerJobPriorityQueue;
+typedef std::priority_queue<TimerJobElement, std::vector<TimerJobElement, STLAllocator<TimerJobElement> >, TimerJobComparator> TimerJobPriorityQueue;
 typedef std::chrono::high_resolution_clock Clock;
 
 class Timer
@@ -51,5 +52,3 @@ private:
 } ;
 
 
-thread_local extern Timer* LTimer;
-thread_local extern int64_t LTickCount;

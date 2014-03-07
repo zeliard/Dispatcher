@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "ThreadLocal.h"
 #include "JobDispatcher.h"
 
 #include <vector>
@@ -52,29 +53,33 @@ TestObject* GTestObject[TEST_OBJECT_COUNT] = { 0, };
 
 void TestWorkerThread(int tid)
 {
-	LExecuterList = new std::deque<AsyncExecutable*>;
+	LMemoryPool = new LocalMemoryPool;
+	LExecuterList = new ExecuterListType;
 	LTimer = new Timer;
 	
-	int i = 0;
-	while (true)
+	//int i = 0;
+	//while (true)
+	for (int i = 0; i < 100000; ++i)
 	{
-		//GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsync(&TestObject::TestFunc0);
-		//GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsync(&TestObject::TestFunc2, double(tid) * 100, i);
-		//GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsync(&TestObject::TestFunc1, 100);
-
+		GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsync(&TestObject::TestFunc0);
+		GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsync(&TestObject::TestFunc2, double(tid) * 100, i);
+		GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsync(&TestObject::TestFunc1, 100);
+		
+		/*
 		if (i++ < 30)
 		{
 			uint32_t after = rand() % 2000;
 			GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsyncAfter(after, &TestObject::TestFuncForTimer, (int)after);
 		}
-
-	
 		LTimer->DoTimerJob();
+		*/
 	}
 
+	LMemoryPool->PrintAllocationStatus();
 
 	delete LTimer;
 	delete LExecuterList;
+	delete LMemoryPool;
 }
 
 

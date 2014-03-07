@@ -72,6 +72,4 @@ struct Job : public JobEntry, ObjectPool<Job<ObjType, ArgTypes...>>
 	Args_		mArgs;
 };
 
-#ifdef WIN32
-#define thread_local __declspec(thread)
-#endif
+

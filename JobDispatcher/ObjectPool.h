@@ -16,16 +16,6 @@
 #define MEM_FREE(x)		free(x)
 #endif 
 
-#define _ASSERT_CRASH(expr) \
-	{ \
-		if (!(expr)) \
-		{ \
-			int* dummy = 0; \
-			*dummy = 0xDEADBEEF; \
-		} \
-	}
-
-
 
 template <class T>
 class ObjectPool
@@ -54,8 +44,6 @@ public:
 		void* popVal = std::atomic_exchange(&mPool[popPos & POOL_SIZE_MASK], (void*)nullptr);
 		if (popVal != nullptr)
 			return popVal;
-	
-		_ASSERT_CRASH(objSize == sizeof(T));
 
 		return MEM_ALLOC(objSize);
 	}
