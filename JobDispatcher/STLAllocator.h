@@ -124,26 +124,49 @@ private:
 	void* __powerof2check2__[((ALLOC_GRANULARITY & (ALLOC_GRANULARITY - 1)) == 0x0) & 0x1];
 };
 
+
 template <class T>
 class STLAllocator
 {
 public:
-	using value_type = T;
-
 	STLAllocator() = default;
 
+	typedef T value_type;
+	typedef value_type* pointer;
+	typedef const value_type* const_pointer;
+	typedef value_type& reference;
+	typedef const value_type& const_reference;
+	typedef std::size_t size_type;
+	typedef std::ptrdiff_t difference_type;
+
 	template <class U>
-	STLAllocator(const STLAllocator<U>&) 
+	STLAllocator(const STLAllocator<U>&)
 	{}
+
+	template <class U>
+	struct rebind
+	{
+		typedef STLAllocator<U> other;
+	};
+
+	void construct(pointer p, const T& t)
+	{ 
+		new(p) T(t);
+	}
+
+	void destroy(pointer p)
+	{ 
+		p->~T(); 
+	}
 
 	T* allocate(size_t n)
 	{
-		return static_cast<T*>( LMemoryPool->Allocate(n*sizeof(T)) ) ;
+		return static_cast<T*>(LMemoryPool->Allocate(n*sizeof(T)));
 	}
 
 	void deallocate(T* ptr, size_t n)
 	{
 		LMemoryPool->Deallocate(ptr, n*sizeof(T));
 	}
-} ;
+};
 
