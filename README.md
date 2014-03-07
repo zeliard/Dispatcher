@@ -7,6 +7,7 @@ G.O.D is a high performance non-blocking task dispatcher which guarantees class 
 * Designed for multi-platform by using C++11 standard
  * Visual Studio Solutions for now, but you can easily use in *NIX environment (Just #include relevant files)
 * Wait-free algorithms
+* Using custom STL allocator
 * Deferred task execution using Timer
 * Simple code-base for easy to understand (easy to adapt to other projects)
 
@@ -15,7 +16,8 @@ G.O.D is a high performance non-blocking task dispatcher which guarantees class 
 
 ```C++
 // IMPORTANT: the beginning of a workerthread, you should put this:
-LExecuterList = new std::deque<AsyncExecutable*>;
+LMemoryPool = new LocalMemoryPool;
+LExecuterList = new ExecuterListType;
 LTimer = new Timer;
 
 // after that, in the loop of the workerthread, put this:
