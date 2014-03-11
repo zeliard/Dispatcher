@@ -4,6 +4,8 @@
 
 #ifdef WIN32
 #define thread_local __declspec(thread)
+#else
+#define thread_local __thread
 #endif
 
 class Timer;

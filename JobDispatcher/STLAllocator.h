@@ -1,7 +1,7 @@
 #pragma once
 
 #include <inttypes.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include "ThreadLocal.h"
 
 #define _ASSERT_CRASH(expr) \
