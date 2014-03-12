@@ -17,10 +17,10 @@ class STLAllocator;
 
 typedef std::deque<AsyncExecutable*, STLAllocator<AsyncExecutable*>> ExecuterListType;
 
-thread_local extern Timer* LTimer;
-thread_local extern int64_t LTickCount;
+extern thread_local Timer* LTimer;
+extern thread_local int64_t LTickCount;
 
-thread_local extern ExecuterListType*	LExecuterList;
-thread_local extern AsyncExecutable*	LCurrentExecuterOccupyingThisThread;
+extern thread_local ExecuterListType*	LExecuterList;
+extern thread_local AsyncExecutable*	LCurrentExecuterOccupyingThisThread;
 
-thread_local extern LocalMemoryPool* LMemoryPool;
+extern thread_local LocalMemoryPool* LMemoryPool;

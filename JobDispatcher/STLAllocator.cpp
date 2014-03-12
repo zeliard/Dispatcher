@@ -1,5 +1,7 @@
 #include "STLAllocator.h"
 
+#include <stdio.h>
+
 LocalMemoryPool::LocalMemoryPool()
 {
 	for (int i = 0; i < MAX_POOL_SIZE; ++i)

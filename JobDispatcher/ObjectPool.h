@@ -1,7 +1,6 @@
 #pragma once
 
 #include <atomic>
-#include <stdlib.h>
 #include <inttypes.h>
 
 #define ALIGNMENT 8
@@ -11,10 +10,12 @@
 #define MEM_ALLOC(x)	_aligned_malloc(x, ALIGNMENT)
 #define MEM_FREE(x)		_aligned_free(x)
 #elif defined __APPLE__
+#include <stdlib.h>
 #define EXPLICIT_MEMORY_ALIGNMENT __attribute__((aligned(ALIGNMENT)))
 #define MEM_ALLOC(x)	malloc(x)
 #define MEM_FREE(x)		free(x)
 #else
+#include <malloc.h>
 #define EXPLICIT_MEMORY_ALIGNMENT __attribute__((aligned(ALIGNMENT)))
 #define MEM_ALLOC(x)	memalign(ALIGNMENT, x)
 #define MEM_FREE(x)		free(x)
