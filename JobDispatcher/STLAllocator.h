@@ -106,7 +106,7 @@ private:
 
 	size_t GetPoolIndex(size_t size) const 
 	{ 
-		return size / ALLOC_GRANULARITY - 1; 
+		return size / ALLOC_GRANULARITY; 
 	}
 
 	enum Config
