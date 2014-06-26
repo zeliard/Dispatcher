@@ -74,7 +74,7 @@ public:
 
 	void* Allocate(size_t size)
 	{
-		if (size > MAX_CHUNK_SIZE)
+		if (size >= MAX_CHUNK_SIZE)
 		{
 			return malloc(size);
 		}
@@ -88,7 +88,7 @@ public:
 
 	void Deallocate(void* ptr, size_t size)
 	{
-		if (size > MAX_CHUNK_SIZE)
+		if (size >= MAX_CHUNK_SIZE)
 		{
 			return free(ptr);
 		}
@@ -112,7 +112,7 @@ private:
 	enum Config
 	{
 		ALLOC_GRANULARITY = 8,
-		MAX_CHUNK_SIZE = 16384,
+		MAX_CHUNK_SIZE = 16384, ///< goes FixedSizeMemoryPool only when required mem-size is less than MAX_CHUNK_SIZE 
 		MAX_POOL_SIZE = MAX_CHUNK_SIZE / ALLOC_GRANULARITY
 	};
 
