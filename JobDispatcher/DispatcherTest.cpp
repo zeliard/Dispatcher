@@ -58,7 +58,7 @@ void TestWorkerThread(int tid)
 	LExecuterList = new ExecuterListType;
 	LTimer = new Timer;
 	
-	int i = 0;
+	//int i = 0;
 	//while (!GStop)
 	for (int i = 0; i < 100000; ++i)
 	{
@@ -109,7 +109,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	for (int i = 0; i < TEST_OBJECT_COUNT; ++i)
 	{
 		total += GTestObject[i]->GetTestCount();
-		printf("ref %d \n", GTestObject[i]->GetSharedFromThis<TestObject>().use_count());
+		//printf("ref %d \n", GTestObject[i]->GetSharedFromThis<TestObject>().use_count());
 	}
 
 	printf("TOTAL %d\n", total);
