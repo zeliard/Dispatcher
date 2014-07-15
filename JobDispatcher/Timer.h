@@ -3,19 +3,21 @@
 #include <chrono>
 #include <vector>
 #include <queue>
+#include <memory>
 #include "STLAllocator.h"
 #include "Job.h"
 
 
 class AsyncExecutable;
+typedef std::shared_ptr<AsyncExecutable> AsyncExecutablePtr;
 
 struct TimerJobElement
 {
-	TimerJobElement(AsyncExecutable* owner, JobEntry* task, int64_t execTick)
+	TimerJobElement(AsyncExecutablePtr owner, JobEntry* task, int64_t execTick)
 	: mOwner(owner), mTask(task), mExecutionTick(execTick)
 	{}
 
-	AsyncExecutable*	mOwner;
+	AsyncExecutablePtr	mOwner;
 	JobEntry*			mTask;
 	int64_t				mExecutionTick;
 } ;
@@ -38,7 +40,7 @@ public:
 	
 	Timer();
 	
-	void PushTimerJob(AsyncExecutable* obj, uint32_t after, JobEntry* task);
+	void PushTimerJob(AsyncExecutablePtr obj, uint32_t after, JobEntry* task);
 	
 	void DoTimerJob();
 

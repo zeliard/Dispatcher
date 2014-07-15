@@ -2,6 +2,7 @@
 
 #include <atomic>
 #include <thread>
+#include <memory>
 
 #include "STLAllocator.h"
 #include "Job.h"
@@ -90,42 +91,23 @@ private:
 
 
 
-class AsyncExecutable
+class AsyncExecutable : public std::enable_shared_from_this<AsyncExecutable>
 {
 public:
 
-	AsyncExecutable() : mRemainTaskCount(0), mRefCount(0) {}
+	AsyncExecutable() : mRemainTaskCount(0) {}
 	virtual ~AsyncExecutable()
+	{}
+
+
+	template <class T>
+	std::shared_ptr<T> GetSharedFromThis()
 	{
-		_ASSERT_CRASH(mRefCount == 0);
+		static_assert(true == std::is_convertible<T, AsyncExecutable>::value, "T should be derived from AsyncExecutable");
+
+		return std::static_pointer_cast<T>(shared_from_this());
 	}
 
-
-	template <class T, class... Args>
-	void DoAsync(void (T::*memfunc)(Args...), Args... args) 
-	{ 
-		Job<T, Args...>* job = new Job<T, Args...>(static_cast<T*>(this), memfunc, args...); 
-		DoTask(job); 
-	} 
-
-	template <class T, class... Args>
-	void DoAsyncAfter(uint32_t after, void (T::*memfunc)(Args...), Args... args)
-	{
-		Job<T, Args...>* job = new Job<T, Args...>(static_cast<T*>(this), memfunc, args...);
-		LTimer->PushTimerJob(this, after, job);
-	}
-
-	void AddRefForThis()
-	{
-		mRefCount.fetch_add(1);
-	}
-
-	void ReleaseRefForThis()
-	{
-		mRefCount.fetch_sub(1);
-	}
-
-private:
 	/// Push a task into Job Queue, and then Execute tasks if possible
 	void DoTask(JobEntry* task)
 	{
@@ -138,8 +120,6 @@ private:
 		{
 			/// register the task in this dispatcher
 			mJobQueue.Push(task);
-
-			AddRefForThis(); ///< refcount +1 for this object
 
 			/// Does any dispathcer exist occupying this worker-thread at this moment?
 			if (LCurrentExecuterOccupyingThisThread != nullptr)
@@ -161,16 +141,17 @@ private:
 					AsyncExecutable* dispacher = LExecuterList->front();
 					LExecuterList->pop_front();
 					dispacher->Flush();
-					dispacher->ReleaseRefForThis();
+					
 				}
 
 				/// release 
 				LCurrentExecuterOccupyingThisThread = nullptr;
-				ReleaseRefForThis(); ///< refcount -1 for this object
+				
 			}
 		}
 	}
 
+private:
 	/// Execute all tasks registered in JobQueue of this dispatcher
 	void Flush()
 	{
@@ -178,7 +159,7 @@ private:
 		{
 			if (JobEntry* job = mJobQueue.Pop())
 			{
-				job->OnExecute();
+				job->mTask();
 				delete job;
 
 				if ( mRemainTaskCount.fetch_sub(1) == 1 )
@@ -192,11 +173,42 @@ private:
 	JobQueue	mJobQueue;
 
 	std::atomic<int64_t> mRemainTaskCount;
-	
-	/// should not release this object when it is in the dispatcher
-	std::atomic<int32_t> mRefCount;
 
 	friend class Timer;
 };
 
 
+template <class T>
+struct is_shared_ptr
+{
+	const static bool value = false;
+};
+
+template <class T>
+struct is_shared_ptr<std::shared_ptr<T>>
+{
+	const static bool value = true;
+};
+
+
+
+template <class T, class F, class... Args>
+void DoAsync(T instance, F memfunc, Args&&... args)
+{ 
+	static_assert(true == is_shared_ptr<T>::value, "T should be shared_ptr");
+	static_assert(true == std::is_convertible<T, std::shared_ptr<AsyncExecutable>>::value, "T should be shared_ptr AsyncExecutable");
+	
+	JobEntry* job = new JobEntry(std::bind(memfunc, instance, std::forward<Args>(args)...));
+
+	std::static_pointer_cast<AsyncExecutable>(instance)->DoTask(job);
+} 
+
+template <class T, class F, class... Args>
+void DoAsyncAfter(uint32_t after, T instance, F memfunc, Args&&... args)
+{
+	static_assert(true == is_shared_ptr<T>::value, "T should be shared_ptr");
+	static_assert(true == std::is_convertible<T, std::shared_ptr<AsyncExecutable>>::value, "T should be shared_ptr AsyncExecutable");
+
+	JobEntry* job = new JobEntry(std::bind(memfunc, instance, std::forward<Args>(args)...));
+	LTimer->PushTimerJob(std::static_pointer_cast<AsyncExecutable>(instance), after, job);
+}

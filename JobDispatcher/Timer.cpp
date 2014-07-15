@@ -15,10 +15,8 @@ int64_t Timer::GetCurrentTick()
 	return std::chrono::duration_cast<std::chrono::milliseconds>(Clock::now() - mBeginTickPoint).count();
 }
 
-void Timer::PushTimerJob(AsyncExecutable* obj, uint32_t after, JobEntry* task)
+void Timer::PushTimerJob(AsyncExecutablePtr obj, uint32_t after, JobEntry* task)
 {
-	obj->AddRefForThis(); ///< for timer
-
 	int64_t dueTimeTick = after + LTickCount;
 
 	mTimerJobQueue.push(TimerJobElement(obj, task, dueTimeTick));
@@ -38,8 +36,7 @@ void Timer::DoTimerJob()
 			break ;
 
 		timerJobElem.mOwner->DoTask(timerJobElem.mTask); ///< pass to the dispatcher
-		timerJobElem.mOwner->ReleaseRefForThis(); ///< for timer
-
+	
 		mTimerJobQueue.pop();
 	}
 

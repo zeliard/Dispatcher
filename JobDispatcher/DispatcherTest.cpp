@@ -49,7 +49,8 @@ private:
 
 };
 
-TestObject* GTestObject[TEST_OBJECT_COUNT] = { 0, };
+std::shared_ptr<TestObject> GTestObject[TEST_OBJECT_COUNT];
+
 
 void TestWorkerThread(int tid)
 {
@@ -57,22 +58,21 @@ void TestWorkerThread(int tid)
 	LExecuterList = new ExecuterListType;
 	LTimer = new Timer;
 	
-	//int i = 0;
-	//while (true)
+	int i = 0;
+	//while (!GStop)
 	for (int i = 0; i < 100000; ++i)
 	{
-		GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsync(&TestObject::TestFunc0);
-		GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsync(&TestObject::TestFunc2, double(tid) * 100, i);
-		GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsync(&TestObject::TestFunc1, 100);
+		DoAsync(GTestObject[rand() % TEST_OBJECT_COUNT], &TestObject::TestFunc0);
+		DoAsync(GTestObject[rand() % TEST_OBJECT_COUNT], &TestObject::TestFunc2, double(tid) * 100, i);
+		DoAsync(GTestObject[rand() % TEST_OBJECT_COUNT], &TestObject::TestFunc1, 100);
+	
+// 		if (i++ < 30)
+// 		{
+// 			uint32_t after = rand() % 2000;
+// 			DoAsyncAfter(after, GTestObject[rand() % TEST_OBJECT_COUNT], &TestObject::TestFuncForTimer, (int)after);
+// 		}
+// 		LTimer->DoTimerJob();
 		
-		/*
-		if (i++ < 30)
-		{
-			uint32_t after = rand() % 2000;
-			GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsyncAfter(after, &TestObject::TestFuncForTimer, (int)after);
-		}
-		LTimer->DoTimerJob();
-		*/
 	}
 
 	LMemoryPool->PrintAllocationStatus();
@@ -86,9 +86,9 @@ void TestWorkerThread(int tid)
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-
+	
 	for (int i = 0; i < TEST_OBJECT_COUNT; ++i)
-		GTestObject[i] = new TestObject;
+		GTestObject[i] = std::make_shared<TestObject>();
 
 	std::vector<std::thread> threadList;
 
@@ -107,16 +107,16 @@ int _tmain(int argc, _TCHAR* argv[])
 	
 	int total = 0;
 	for (int i = 0; i < TEST_OBJECT_COUNT; ++i)
+	{
 		total += GTestObject[i]->GetTestCount();
+		printf("ref %d \n", GTestObject[i]->GetSharedFromThis<TestObject>().use_count());
+	}
 
 	printf("TOTAL %d\n", total);
 
-
+	
 	getchar();
-
-	for (int i = 0; i < TEST_OBJECT_COUNT; ++i)
-		delete GTestObject[i];
-
+	
 
 	return 0;
 }
