@@ -37,8 +37,9 @@ void Timer::DoTimerJob()
 		if (LTickCount < timerJobElem.mExecutionTick )
 			break ;
 
-		timerJobElem.mOwner->DoTask(timerJobElem.mTask); ///< pass to the dispatcher
-		timerJobElem.mOwner->ReleaseRefForThis(); ///< for timer
+		AsyncExecutable* owner = timerJobElem.mOwner; ///< 'cause mOwner can be changed in DoTask..
+		owner->DoTask(timerJobElem.mTask); ///< pass to the dispatcher
+		owner->ReleaseRefForThis(); ///< for timer
 
 		mTimerJobQueue.pop();
 	}
