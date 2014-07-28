@@ -4,12 +4,12 @@
 #include "Timer.h"
 #include "JobDispatcher.h"
 
-void Runnable::Initialize()
+void Runnable::Initialize(int tid)
 {
 	LMemoryPool = new LocalMemoryPool;
 	LExecuterList = new ExecuterListType;
 	LTimer = new Timer;
-	LWorkerThreadId = mThreadId;
+	LWorkerThreadId = mThreadId = tid;
 }
 
 void Runnable::Finalize()
@@ -22,8 +22,7 @@ void Runnable::Finalize()
 
 void Runnable::ThreadRun(int tid)
 {
-	mThreadId = tid;
-	Initialize(); 
+	Initialize(tid); 
 	
 	while (true)
 	{

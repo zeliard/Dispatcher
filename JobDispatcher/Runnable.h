@@ -12,7 +12,7 @@ public:
 	int GetThreadId() { return mThreadId; }
 
 private:
-	void Initialize();
+	void Initialize(int tid);
 	void Finalize();
 
 	int mThreadId;
