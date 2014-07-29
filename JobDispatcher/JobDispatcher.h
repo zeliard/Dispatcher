@@ -142,7 +142,7 @@ public:
 	}
 
 private:
-	/// Push a task into Job Queue, and then Execute tasks if possible
+	/// Push a task into Job Queue
 	void DoTask(JobEntry* task)
 	{
 		if ( mRemainTaskCount.fetch_add(1) != 0 )

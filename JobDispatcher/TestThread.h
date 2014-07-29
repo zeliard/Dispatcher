@@ -37,16 +37,11 @@ public:
 		//printf("[%d] TestFunc1 %d\n", mTestCount, b);
 	}
 
-	void TestFunc2(double a, int b)
-	{
-		++mTestCount;
-		//printf("[%d] TestFunc2 %f\n", mTestCount, a + b);
-	}
+	void TestFunc2(double a, int b);
+	
 
-	void TestFuncForTimer(int b)
-	{
-		printf("TestFuncForTimer [%d] \n", b);
-	}
+	void TestFuncForTimer(int b);
+	
 
 
 	int GetTestCount() { return mTestCount; }
