@@ -125,6 +125,22 @@ public:
 		mRefCount.fetch_sub(1);
 	}
 
+	/// Execute all tasks registered in JobQueue of this dispatcher
+	void Flush()
+	{
+		while (true)
+		{
+			if (JobEntry* job = mJobQueue.Pop())
+			{
+				job->OnExecute();
+				delete job;
+
+				if (mRemainTaskCount.fetch_sub(1) == 1)
+					break;
+			}
+		}
+	}
+
 private:
 	/// Push a task into Job Queue, and then Execute tasks if possible
 	void DoTask(JobEntry* task)
@@ -141,51 +157,12 @@ private:
 
 			AddRefForThis(); ///< refcount +1 for this object
 
-			/// Does any dispathcer exist occupying this worker-thread at this moment?
-			if (LCurrentExecuterOccupyingThisThread != nullptr)
-			{
-				/// just register this dispatcher in this worker-thread
-				LExecuterList->push_back(this);
-			}
-			else
-			{
-				/// acquire
-				LCurrentExecuterOccupyingThisThread = this;
-
-				/// invokes all tasks of this dispatcher
-				Flush();
-
-				/// invokes all tasks of other dispatchers registered in this thread
-				while (!LExecuterList->empty())
-				{
-					AsyncExecutable* dispacher = LExecuterList->front();
-					LExecuterList->pop_front();
-					dispacher->Flush();
-					dispacher->ReleaseRefForThis();
-				}
-
-				/// release 
-				LCurrentExecuterOccupyingThisThread = nullptr;
-				ReleaseRefForThis(); ///< refcount -1 for this object
-			}
+			/// just register this dispatcher in this worker-thread
+			LExecuterList->push_back(this);
 		}
 	}
 
-	/// Execute all tasks registered in JobQueue of this dispatcher
-	void Flush()
-	{
-		while ( true )
-		{
-			if (JobEntry* job = mJobQueue.Pop())
-			{
-				job->OnExecute();
-				delete job;
 
-				if ( mRemainTaskCount.fetch_sub(1) == 1 )
-					break;
-			}
-		}
-	}
 
 private:
 	/// member variables

@@ -26,11 +26,23 @@ void Runnable::ThreadRun(int tid)
 	
 	while (true)
 	{
-		/// do task...
+		/// do content-specific tasks...
 		if ( false == Run() )
 			break;
 
+		/// do timer tasks
 		LTimer->DoTimerJob();
+
+		/// invokes all tasks of other dispatchers registered in this thread
+		while (!LExecuterList->empty())
+		{
+			//TODO: load balancing... here
+
+			AsyncExecutable* dispacher = LExecuterList->front();
+			LExecuterList->pop_front();
+			dispacher->Flush();
+			dispacher->ReleaseRefForThis();
+		}
 	}
 
 	Finalize();

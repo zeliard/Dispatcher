@@ -23,6 +23,5 @@ extern thread_local Timer* LTimer;
 extern thread_local int64_t LTickCount;
 
 extern thread_local ExecuterListType*	LExecuterList;
-extern thread_local AsyncExecutable*	LCurrentExecuterOccupyingThisThread;
 
 extern thread_local LocalMemoryPool* LMemoryPool;
