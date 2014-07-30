@@ -3,6 +3,7 @@
 #include "STLAllocator.h"
 #include "Timer.h"
 #include "JobDispatcher.h"
+#include "LoadBalancer.h"
 
 void Runnable::Initialize(int tid)
 {
@@ -20,12 +21,18 @@ void Runnable::Finalize()
 }
 
 
-void Runnable::ThreadRun(int tid)
+void Runnable::ThreadRun(int tid, LoadBalancer* lb)
 {
 	Initialize(tid); 
 	
 	while (true)
 	{
+		/// thread tick update
+		int64_t currTick = LTimer->GetCurrentTick();
+		lb->SetRecentTickElapsed(currTick - LTickCount);
+		LTickCount = currTick;
+		
+
 		/// do content-specific tasks...
 		if ( false == Run() )
 			break;
@@ -43,6 +50,7 @@ void Runnable::ThreadRun(int tid)
 			dispacher->Flush();
 			dispacher->ReleaseRefForThis();
 		}
+		
 	}
 
 	Finalize();

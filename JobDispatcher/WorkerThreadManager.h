@@ -4,11 +4,13 @@
 #include <vector>
 #include <memory>
 #include "Runnable.h"
+#include "LoadBalancer.h"
 
 class WorkerThreadManager
 {
 public:
-	WorkerThreadManager(int workerCount) : mWorkerThreadCount(workerCount) {}
+	WorkerThreadManager(int workerCount) : mWorkerThreadCount(workerCount), mLoadBalancer(workerCount)
+	{}
 
 	template <class T>
 	void RunWorkerThreads()
@@ -18,7 +20,7 @@ public:
 		for (int i = 0; i < mWorkerThreadCount; ++i)
 		{
 			std::shared_ptr<T> instance = std::make_shared<T>();
-			mWorkerThreadList.push_back(std::thread(&T::ThreadRun, instance, i));
+			mWorkerThreadList.push_back(std::thread(&T::ThreadRun, instance, i, &mLoadBalancer));
 		}
 
 		for (auto& thread : mWorkerThreadList)
@@ -28,10 +30,13 @@ public:
 		}
 	}
 
+
 private:
 
 	int mWorkerThreadCount;
 	std::vector<std::thread> mWorkerThreadList;
+
+	LoadBalancer mLoadBalancer;
 };
 
 extern WorkerThreadManager* GWorkerThreadManager;

@@ -17,5 +17,6 @@ int _tmain(int argc, _TCHAR* argv[])
 
 
 
+	delete GWorkerThreadManager;
 	return 0;
 }

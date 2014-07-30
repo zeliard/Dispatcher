@@ -42,9 +42,11 @@ public:
 	
 	void DoTimerJob();
 
+	int64_t GetCurrentTick();
+
 private:
 	
-	int64_t GetCurrentTick();
+	
 
 	Clock::time_point		mBeginTickPoint;
 	TimerJobPriorityQueue	mTimerJobQueue;

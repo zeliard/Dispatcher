@@ -27,8 +27,6 @@ void Timer::PushTimerJob(AsyncExecutable* obj, uint32_t after, JobEntry* task)
 
 void Timer::DoTimerJob()
 {
-	/// thread tick update
-	LTickCount = GetCurrentTick();
 
 	while ( !mTimerJobQueue.empty() )
 	{

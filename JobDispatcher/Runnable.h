@@ -1,12 +1,14 @@
 #pragma once
 
+class LoadBalancer;
+
 class Runnable
 {
 public:
 	Runnable()  {}
 	virtual ~Runnable() {}
 
-	void ThreadRun(int tid);
+	void ThreadRun(int tid, LoadBalancer* lb);
 	virtual bool Run() = 0;
 
 	int GetThreadId() { return mThreadId; }
