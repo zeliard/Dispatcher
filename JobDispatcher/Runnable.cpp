@@ -27,15 +27,14 @@ void Runnable::ThreadRun(int tid, LoadBalancer* lb)
 	
 	while (true)
 	{
+		/// do content-specific tasks...
+		if ( false == Run() )
+			break;
+
 		/// thread tick update
 		int64_t currTick = LTimer->GetCurrentTick();
 		lb->SetRecentTickElapsed(currTick - LTickCount);
 		LTickCount = currTick;
-		
-
-		/// do content-specific tasks...
-		if ( false == Run() )
-			break;
 
 		/// do timer tasks
 		LTimer->DoTimerJob();
