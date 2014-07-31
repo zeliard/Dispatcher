@@ -36,14 +36,18 @@ void Runnable::ThreadRun(int tid, LoadBalancer* lb)
 		lb->SetRecentTickElapsed(currTick - LTickCount);
 		LTickCount = currTick;
 
+		/// do LoadBalancing
+		lb->DoLoadBalancing();
+
 		/// do timer tasks
 		LTimer->DoTimerJob();
+
+		/// do LoadSharing
+		lb->DoLoadSharing();
 
 		/// invokes all tasks of other dispatchers registered in this thread
 		while (!LExecuterList->empty())
 		{
-			//TODO: load balancing... here
-
 			AsyncExecutable* dispacher = LExecuterList->front();
 			LExecuterList->pop_front();
 			dispacher->Flush();

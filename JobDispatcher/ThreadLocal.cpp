@@ -6,6 +6,7 @@
 thread_local int LWorkerThreadId = -1;
 thread_local Timer* LTimer = nullptr;
 thread_local int64_t LTickCount = 0;
+thread_local int64_t LCurrentLoadBalancingTaskIndex = 0;
 
 thread_local ExecuterListType*	LExecuterList = nullptr;
 

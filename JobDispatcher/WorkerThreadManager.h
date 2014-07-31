@@ -32,11 +32,11 @@ public:
 
 
 private:
+	LoadBalancer mLoadBalancer;
 
 	int mWorkerThreadCount;
 	std::vector<std::thread> mWorkerThreadList;
-
-	LoadBalancer mLoadBalancer;
+	
 };
 
 extern WorkerThreadManager* GWorkerThreadManager;

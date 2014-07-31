@@ -21,6 +21,7 @@ extern thread_local int LWorkerThreadId;
 
 extern thread_local Timer* LTimer;
 extern thread_local int64_t LTickCount;
+extern thread_local int64_t LCurrentLoadBalancingTaskIndex;
 
 extern thread_local ExecuterListType*	LExecuterList;
 
