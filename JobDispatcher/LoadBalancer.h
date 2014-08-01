@@ -4,7 +4,7 @@
 
 class AsyncExecutable;
 
-typedef std::vector<AsyncExecutable*> DispatcherList;
+typedef std::vector<AsyncExecutable*> DispatcherList; ///< don't need to use custom STL allocator due to occasionalness
 
 class LoadBalancingTask
 {
@@ -31,8 +31,6 @@ public:
 	LoadBalancer(int threadCount);
 	~LoadBalancer();
 
-	void SetRecentTickElapsed(int64_t elapsed);
-
 	void DoLoadBalancing();
 	void DoLoadSharing();
 
@@ -47,7 +45,7 @@ private:
 	{
 		LB_MAX_TASK_SIZE = 1024,
 		LB_MAX_TAST_MASK = LB_MAX_TASK_SIZE-1,
-		LB_HANDOVER_THRESHOLD = 1000 ///< worker thread loop elapsed time (ms)
+		LB_HANDOVER_THRESHOLD = 100 ///< worker thread loop elapsed time (ms)
 	};
 
 	std::atomic<LoadBalancingTask*> mLoadBalancingTasks[LB_MAX_TASK_SIZE];

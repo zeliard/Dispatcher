@@ -24,7 +24,7 @@ void Runnable::Finalize()
 void Runnable::ThreadRun(int tid, LoadBalancer* lb)
 {
 	Initialize(tid); 
-	
+
 	while (true)
 	{
 		/// do content-specific tasks...
@@ -33,7 +33,7 @@ void Runnable::ThreadRun(int tid, LoadBalancer* lb)
 
 		/// thread tick update
 		int64_t currTick = LTimer->GetCurrentTick();
-		lb->SetRecentTickElapsed(currTick - LTickCount);
+		LRecentElapsedLoopTick = currTick - LTickCount;
 		LTickCount = currTick;
 
 		/// do LoadBalancing

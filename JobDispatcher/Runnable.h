@@ -9,6 +9,7 @@ public:
 	virtual ~Runnable() {}
 
 	void ThreadRun(int tid, LoadBalancer* lb);
+
 	virtual bool Run() = 0;
 
 	int GetThreadId() { return mThreadId; }

@@ -49,6 +49,9 @@
     <ClInclude Include="Runnable.h">
       <Filter>G.O.D</Filter>
     </ClInclude>
+    <ClInclude Include="TestObject.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -76,6 +79,9 @@
       <Filter>G.O.D</Filter>
     </ClCompile>
     <ClCompile Include="TestThread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

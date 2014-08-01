@@ -7,9 +7,8 @@
 
 LoadBalancingTask::LoadBalancingTask(int threadCount) : mRefCount(threadCount), mWorkerThreadCount(threadCount)
 {
-	mRefCount.fetch_add(threadCount);
 	mCurrentHandOverThreadId = 0;
-	mHandOverList = new DispatcherList[mWorkerThreadCount]; //TODO: need to be optimized
+	mHandOverList = new DispatcherList[mWorkerThreadCount]; ///< don't need to use custom memory pool due to occasionalness
 }
 
 LoadBalancingTask::~LoadBalancingTask()
@@ -62,15 +61,10 @@ LoadBalancer::~LoadBalancer()
 	delete[] mRecentTickElapsed;
 }
 
-void LoadBalancer::SetRecentTickElapsed(int64_t elapsed)
-{
-	mRecentTickElapsed[LWorkerThreadId] = elapsed;
-}
-
 
 void LoadBalancer::DoLoadBalancing()
 {
-	if (mRecentTickElapsed[LWorkerThreadId] < LB_HANDOVER_THRESHOLD)
+	if (LRecentElapsedLoopTick < LB_HANDOVER_THRESHOLD)
 		return;
 
 	if (LExecuterList->size() < mWorkerThreadCount)
@@ -97,6 +91,9 @@ void LoadBalancer::DoLoadSharing()
 		
 		LoadBalancingTask* lbTask = mLoadBalancingTasks[LCurrentLoadBalancingTaskIndex & LB_MAX_TAST_MASK].load();
 
+		if (lbTask == nullptr) ///< possible if another thread proceeds between (1) and (2)
+			continue;
+
 		if (lbTask->OnThreadLocalExecute())
 		{
 			/// final call only in one thread
@@ -109,9 +106,9 @@ void LoadBalancer::DoLoadSharing()
 
 void LoadBalancer::PushLoadBalancingTask(LoadBalancingTask* lbTask)
 {
-	int64_t index = mLoadBalancingTaskCount.fetch_add(1);
+	int64_t index = mLoadBalancingTaskCount.fetch_add(1); ///< (1)
 
-	LoadBalancingTask* prevTask = std::atomic_exchange(&mLoadBalancingTasks[index & LB_MAX_TAST_MASK], lbTask);
+	LoadBalancingTask* prevTask = std::atomic_exchange(&mLoadBalancingTasks[index & LB_MAX_TAST_MASK], lbTask); ///<(2)
 	_ASSERT_CRASH(prevTask == nullptr);
 }
 

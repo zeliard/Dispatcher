@@ -1,22 +1,26 @@
 #include "stdafx.h"
-
+#include <time.h>
 #include "WorkerThreadManager.h"
 #include "TestThread.h"
-
-
-TestObject* GTestObject[TEST_OBJECT_COUNT] = { 0, };
+#include "TestObject.h"
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	for (int i = 0; i < TEST_OBJECT_COUNT; ++i)
-		GTestObject[i] = new TestObject;
+	srand((unsigned int)time(NULL));
+
+	for (int i = 0; i < MAX_TEST_OBJECTS; ++i)
+		GTestObjects[i] = new TestObject;
 
 	GWorkerThreadManager = new WorkerThreadManager(4);
 
 	GWorkerThreadManager->RunWorkerThreads<TestThread>(); ///< block here
 
+	for (int i = 0; i < MAX_TEST_OBJECTS; ++i)
+	{
+		printf("TestObject %d - TestCount %d\n", i, GTestObjects[i]->GetTestCount());
+	}
+		
+	getchar();
 
-
-	delete GWorkerThreadManager;
 	return 0;
 }
