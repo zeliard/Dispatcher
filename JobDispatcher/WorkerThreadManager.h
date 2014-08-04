@@ -15,7 +15,7 @@ public:
 	template <class T>
 	void RunWorkerThreads()
 	{
-		static_assert(true == std::is_convertible<T, Runnable>::value, "only allowed when Runnable");
+		static_assert(true == std::is_convertible<T*, Runnable*>::value, "only allowed when Runnable");
 
 		for (int i = 0; i < mWorkerThreadCount; ++i)
 		{

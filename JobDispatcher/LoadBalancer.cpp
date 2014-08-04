@@ -52,8 +52,7 @@ LoadBalancer::LoadBalancer(int threadCount) : mWorkerThreadCount(threadCount), m
 	mRecentTickElapsed = new int64_t[mWorkerThreadCount];
 	
 	for (int i = 0; i < LB_MAX_TASK_SIZE; ++i)
-		std::atomic_init(&mLoadBalancingTasks[i], nullptr);
-
+		mLoadBalancingTasks[i].store(nullptr);
 }
 
 LoadBalancer::~LoadBalancer()
