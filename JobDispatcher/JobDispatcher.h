@@ -103,7 +103,7 @@ public:
 	template <class T>
 	std::shared_ptr<T> GetSharedFromThis()
 	{
-		static_assert(true == std::is_convertible<T, AsyncExecutable>::value, "T should be derived from AsyncExecutable");
+		static_assert(true == std::is_convertible<T*, AsyncExecutable*>::value, "T should be derived from AsyncExecutable");
 
 		return std::static_pointer_cast<T>(shared_from_this());
 	}

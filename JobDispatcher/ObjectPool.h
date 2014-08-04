@@ -74,10 +74,10 @@ private:
 };
 
 template <class T>
-std::atomic<void*> ObjectPool<T>::mPool[POOL_MAX_SIZE];
+std::atomic<void*> ObjectPool<T>::mPool[POOL_MAX_SIZE] = {} ;
 
 template <class T>
-std::atomic<uint64_t> ObjectPool<T>::mHeadPos;
+std::atomic<uint64_t> ObjectPool<T>::mHeadPos(0);
 
 template <class T>
-std::atomic<uint64_t> ObjectPool<T>::mTailPos;
+std::atomic<uint64_t> ObjectPool<T>::mTailPos(0);
