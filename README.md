@@ -11,15 +11,17 @@ G.O.D is a high performance non-blocking task dispatcher which guarantees class 
 * Deferred task execution using Timer
 * Simple code-base for easy to understand (easy to adapt to other projects)
 
-## Branches
+## BRANCHES
 * base_version: this master branch (basic version)
 * bind_version: std::bind is adopted instead of a custom Job class interface
 * LB_version: load-balancing among worker-threads (new arrival!)
 
 
-## HOW TO USE (basic version)
+## HOW TO USE 
 
 ```C++
+// for a basic version
+
 // IMPORTANT: the beginning of a workerthread, you should put this:
 LMemoryPool = new LocalMemoryPool;
 LExecuterList = new ExecuterListType;
