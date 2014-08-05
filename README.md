@@ -6,7 +6,8 @@ G.O.D is a high performance non-blocking task dispatcher which guarantees class 
 ## FEATURES
 * Designed for multi-platform by using C++11 standard
  * Visual Studio Solutions for now, but you can easily use in *NIX environment (Just #include relevant files)
-* Wait-free algorithms
+* Lock-free algorithms (non-blocking)
+* Load-balancing among worker-threads (load-scatterer)
 * Using custom STL allocator
 * Deferred task execution using Timer
 * Simple code-base for easy to understand (easy to adapt to other projects)
@@ -15,37 +16,46 @@ G.O.D is a high performance non-blocking task dispatcher which guarantees class 
 ## HOW TO USE
 
 ```C++
-// IMPORTANT: the beginning of a workerthread, you should put this:
-LMemoryPool = new LocalMemoryPool;
-LExecuterList = new ExecuterListType;
-LTimer = new Timer;
 
-// after that, in the loop of the workerthread, put this:
-LTimer->DoTimerJob();
-
-// And then you can attach G.O.D (AsyncExecutable) to an object like this:
+// First, you can attach G.O.D (AsyncExecutable) to an object like this:
 class TestObject : public AsyncExecutable
 {
 public:
 
 	void TestFunc(double a, int b)
 	{
-	  // do something...
+	  // do something... 
+	  // (e.g.) someobj->DoAsync(...);
 	}
 	
 	// ... ...
 };
 
-// Now, you can call a member function like this:
-TestObject* testobj = new TestObject;
-// ... ...
-testobject->DoAsync(&TestObject::TestFunc, 100.123, 456);
 
-// or, deferred execution 1000ms later like this:
-testobject->DoAsyncAfter(1000, &TestObject::TestFunc, 100.123, 456);
+// somewhere ... 
+TestObject* testobj = new TestObject;
+
+// And then, make your own worker thread which implements Runnable::Run() like this:
+class TestThread : public Runnable
+{
+public:
+	virtual bool Run()
+	{
+	   // Now, you can call a member function like this:
+	   testobject->DoAsync(&TestObject::TestFunc, 100.123, 456);
+
+	   // or, deferred execution 1000ms later like this:
+	   testobject->DoAsyncAfter(1000, &TestObject::TestFunc, 100.123, 456);
+	}
+};
+
 ```
 
-For more information, just see self-explaning [DispatcherTest.cpp](JobDispatcher/DispatcherTest.cpp)  
+For more information, just see self-explaning files:
+[DispatcherTest.cpp](JobDispatcher/DispatcherTest.cpp)
+[TestObject.h](JobDispatcher/TestObject.h)
+[TestThread.cpp](JobDispatcher/TestThread.cpp)
+
 
 ## WARNING!
 
