@@ -16,7 +16,6 @@ G.O.D is a high performance non-blocking task dispatcher which guarantees class 
 ## HOW TO USE
 
 ```C++
-
 // First, you can attach G.O.D (AsyncExecutable) to an object like this:
 class TestObject : public AsyncExecutable
 {
@@ -46,6 +45,8 @@ public:
 
 	   // or, deferred execution 1000ms later like this:
 	   testobject->DoAsyncAfter(1000, &TestObject::TestFunc, 100.123, 456);
+	   
+	   // ... ...
 	}
 };
 
