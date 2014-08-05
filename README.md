@@ -6,13 +6,18 @@ G.O.D is a high performance non-blocking task dispatcher which guarantees class 
 ## FEATURES
 * Designed for multi-platform by using C++11 standard
  * Visual Studio Solutions for now, but you can easily use in *NIX environment (Just #include relevant files)
-* Wait-free algorithms
+* Lock-free algorithms (non-blocking)
 * Using custom STL allocator
 * Deferred task execution using Timer
 * Simple code-base for easy to understand (easy to adapt to other projects)
 
+## Branches
+* base_version: this master branch (basic version)
+* bind_version: std::bind is adopted instead of a custom Job class interface
+* LB_version: load-balancing among worker-threads (new arrival!)
 
-## HOW TO USE
+
+## HOW TO USE (basic version)
 
 ```C++
 // IMPORTANT: the beginning of a workerthread, you should put this:
