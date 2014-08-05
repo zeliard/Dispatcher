@@ -6,6 +6,7 @@ class AsyncExecutable;
 
 typedef std::vector<AsyncExecutable*> DispatcherList; ///< don't need to use custom STL allocator due to occasionalness
 
+/// load-scatterer
 class LoadBalancingTask
 {
 public:
