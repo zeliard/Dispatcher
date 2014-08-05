@@ -104,14 +104,14 @@ public:
 	template <class T, class... Args>
 	void DoAsync(void (T::*memfunc)(Args...), Args... args) 
 	{ 
-		Job<T, Args...>* job = new Job<T, Args...>(static_cast<T*>(this), memfunc, args...); 
+		Job<T, Args...>* job = new Job<T, Args...>(static_cast<T*>(this), memfunc, std::forward<Args>(args)...);
 		DoTask(job); 
 	} 
 
 	template <class T, class... Args>
 	void DoAsyncAfter(uint32_t after, void (T::*memfunc)(Args...), Args... args)
 	{
-		Job<T, Args...>* job = new Job<T, Args...>(static_cast<T*>(this), memfunc, args...);
+		Job<T, Args...>* job = new Job<T, Args...>(static_cast<T*>(this), memfunc, std::forward<Args>(args)...);
 		LTimer->PushTimerJob(this, after, job);
 	}
 
