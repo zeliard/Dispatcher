@@ -53,7 +53,6 @@ private:
 	std::atomic<int64_t> mLoadBalancingTaskCount;
 
 	int	 mWorkerThreadCount;
-	int64_t* mRecentTickElapsed;
 
 	void* __powerof2check__[((LB_MAX_TASK_SIZE & LB_MAX_TAST_MASK) == 0x0) & 0x1];
 };

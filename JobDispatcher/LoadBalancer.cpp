@@ -49,15 +49,12 @@ bool LoadBalancingTask::OnThreadLocalExecute()
 
 LoadBalancer::LoadBalancer(int threadCount) : mWorkerThreadCount(threadCount), mLoadBalancingTaskCount(0)
 {
-	mRecentTickElapsed = new int64_t[mWorkerThreadCount];
-	
 	for (int i = 0; i < LB_MAX_TASK_SIZE; ++i)
 		mLoadBalancingTasks[i].store(nullptr);
 }
 
 LoadBalancer::~LoadBalancer()
 {
-	delete[] mRecentTickElapsed;
 }
 
 
