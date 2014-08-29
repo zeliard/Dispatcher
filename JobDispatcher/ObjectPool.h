@@ -70,7 +70,7 @@ private:
 	static std::atomic<uint64_t> EXPLICIT_MEMORY_ALIGNMENT	mHeadPos;
 	static std::atomic<uint64_t> EXPLICIT_MEMORY_ALIGNMENT	mTailPos;
 
-	void* __powerof2check__[((POOL_MAX_SIZE & POOL_SIZE_MASK) == 0x0) & 0x1];
+	static_assert((POOL_MAX_SIZE & POOL_SIZE_MASK) == 0x0, "pool's size must be power of 2");
 };
 
 template <class T>
