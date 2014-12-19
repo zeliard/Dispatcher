@@ -62,7 +62,7 @@ void TestWorkerThread(int tid)
 	for (int i = 0; i < 100000; ++i)
 	{
 		GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsync(&TestObject::TestFunc0);
-		GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsync(&TestObject::TestFunc2, double(tid) * 100, i);
+		GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsync(&TestObject::TestFunc2, double(tid) * 100, std::move(i));
 		GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsync(&TestObject::TestFunc1, 100);
 		
 		/*
