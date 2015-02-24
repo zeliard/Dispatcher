@@ -22,7 +22,7 @@ public:
 		mTestCount += b;
 
 		if (a < 50.0)
-			DoAsync(&TestObject::TestFunc1, b);
+			DoAsync(&TestObject::TestFunc1, std::move(b));
 	}
 
 	void TestFuncForTimer(int b)
@@ -30,7 +30,7 @@ public:
 		//printf("TestFuncForTimer [%d] \n", b);
 
 		if (rand() % 2 == 0)
-			DoAsyncAfter(1000, &TestObject::TestFuncForTimer, -b);
+			DoAsyncAfter(1000, &TestObject::TestFuncForTimer, std::move(-b));
 	}
 
 	int GetTestCount() { return mTestCount; }
