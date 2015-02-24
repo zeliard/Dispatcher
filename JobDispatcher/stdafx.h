@@ -10,6 +10,8 @@
 #include <stdio.h>
 #include <tchar.h>
 
+#include <memory>
+#include <iostream>
 
 
 // TODO: reference additional headers your program requires here

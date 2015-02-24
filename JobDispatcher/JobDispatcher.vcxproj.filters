@@ -37,6 +37,9 @@
     <ClInclude Include="ThreadLocal.h">
       <Filter>G.O.D</Filter>
     </ClInclude>
+    <ClInclude Include="Runnable.h">
+      <Filter>G.O.D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -52,6 +55,9 @@
       <Filter>G.O.D</Filter>
     </ClCompile>
     <ClCompile Include="ThreadLocal.cpp">
+      <Filter>G.O.D</Filter>
+    </ClCompile>
+    <ClCompile Include="Runnable.cpp">
       <Filter>G.O.D</Filter>
     </ClCompile>
   </ItemGroup>

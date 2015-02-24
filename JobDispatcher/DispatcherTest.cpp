@@ -1,122 +1,100 @@
 #include "stdafx.h"
 
-#include "ThreadLocal.h"
 #include "JobDispatcher.h"
 
-#include <vector>
-#include <iostream>
-#include <thread>
-
-
-const int WORKER_THREAD = 8;
-const int TEST_OBJECT_COUNT = 10;
-
+enum TestEnvironment
+{
+	TEST_OBJECT_COUNT = 10,
+	TEST_WORKER_THREAD = 4,
+};
 
 class TestObject : public AsyncExecutable
 {
 public:
 	TestObject() : mTestCount(0)
 	{}
-
+	
 	void TestFunc0()
 	{
 		++mTestCount;
-		//printf("[%d] TestFunc0 \n", mTestCount);
 	}
 
 	void TestFunc1(int b)
 	{
-		++mTestCount;
-		//printf("[%d] TestFunc1 %d\n", mTestCount, b);
+		mTestCount += b;
 	}
 
 	void TestFunc2(double a, int b)
 	{
-		++mTestCount;
-		//printf("[%d] TestFunc2 %f\n", mTestCount, a + b);
+		mTestCount += b;
+
+		if (a < 50.0)
+			DoAsync(&TestObject::TestFunc1, std::move(b));
 	}
 
 	void TestFuncForTimer(int b)
 	{
-		printf("TestFuncForTimer [%d] \n", b);
+		if (rand() % 2 == 0)
+			DoAsyncAfter(1000, &TestObject::TestFuncForTimer, std::move(-b));
 	}
 
-
 	int GetTestCount() { return mTestCount; }
-private:
 
+private:
 	int mTestCount;
 
 };
 
-TestObject* GTestObject[TEST_OBJECT_COUNT] = { 0, };
+std::vector<std::shared_ptr<TestObject>> gTestObjects;
 
-void TestWorkerThread(int tid)
+
+class TestWorkerThread : public Runnable
 {
-	LMemoryPool = new LocalMemoryPool;
-	LExecuterList = new ExecuterListType;
-	LTimer = new Timer;
-	
-	//int i = 0;
-	//while (true)
-	for (int i = 0; i < 100000; ++i)
+public:
+	~TestWorkerThread()
 	{
-		GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsync(&TestObject::TestFunc0);
-		GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsync(&TestObject::TestFunc2, double(tid) * 100, std::move(i));
-		GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsync(&TestObject::TestFunc1, 100);
-		
-		/*
-		if (i++ < 30)
-		{
-			uint32_t after = rand() % 2000;
-			GTestObject[rand() % TEST_OBJECT_COUNT]->DoAsyncAfter(after, &TestObject::TestFuncForTimer, (int)after);
-		}
-		LTimer->DoTimerJob();
-		*/
+		printf("tt dtor");
 	}
 
-	LMemoryPool->PrintAllocationStatus();
+	virtual bool Run()
+	{
+		/// TEST
+		uint32_t after = rand() % 2000;
 
-	delete LTimer;
-	delete LExecuterList;
-	delete LMemoryPool;
-}
+		if (after > 1000)
+		{
+			gTestObjects[rand() % TEST_OBJECT_COUNT]->DoAsync(&TestObject::TestFunc0);
+			gTestObjects[rand() % TEST_OBJECT_COUNT]->DoAsync(&TestObject::TestFunc2, double(rand() % 100), 2);
+			gTestObjects[rand() % TEST_OBJECT_COUNT]->DoAsync(&TestObject::TestFunc1, 1);
 
+			gTestObjects[rand() % TEST_OBJECT_COUNT]->DoAsyncAfter(after, &TestObject::TestFuncForTimer, (int)after);
+		}
+
+		/// exit condition
+		if (gTestObjects[rand() % TEST_OBJECT_COUNT]->GetTestCount() > 5000)
+		{
+			std::cout << "thread " << std::this_thread::get_id() << " end by force\n";
+			return false;
+		}
+
+		return true;
+	}
+};
 
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-
 	for (int i = 0; i < TEST_OBJECT_COUNT; ++i)
-		GTestObject[i] = new TestObject;
+		gTestObjects.push_back(std::make_shared<TestObject>());
 
-	std::vector<std::thread> threadList;
+	JobDispatcher<TestWorkerThread> workerService(TEST_WORKER_THREAD);
 
-	for (int i = 0; i <WORKER_THREAD; ++i)
-	{
-		threadList.push_back(std::thread(TestWorkerThread, i+1));
-	}
-
-
-	for (auto& thread : threadList)
-	{
-		if (thread.joinable())
-			thread.join();
-	}
-
+	workerService.RunWorkerThreads();
 	
-	int total = 0;
-	for (int i = 0; i < TEST_OBJECT_COUNT; ++i)
-		total += GTestObject[i]->GetTestCount();
-
-	printf("TOTAL %d\n", total);
+	for (auto& t : gTestObjects)
+		std::cout << "TestCount: " << t->GetTestCount() << std::endl;
 
 
 	getchar();
-
-	for (int i = 0; i < TEST_OBJECT_COUNT; ++i)
-		delete GTestObject[i];
-
-
 	return 0;
 }
