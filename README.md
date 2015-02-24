@@ -42,10 +42,10 @@ public:
 	virtual bool Run()
 	{
 	   // Now, you can call a member function like this:
-	   testobject->DoAsync(&TestObject::TestFunc, 100.123, 456);
+	   testobj->DoAsync(&TestObject::TestFunc, 100.123, 456);
 
 	   // or, deferred execution 1000ms later like this:
-	   testobject->DoAsyncAfter(1000, &TestObject::TestFunc, 100.123, 456);
+	   testobj->DoAsyncAfter(1000, &TestObject::TestFunc, 100.123, 456);
 	   
 	   // ... ...
 	}
