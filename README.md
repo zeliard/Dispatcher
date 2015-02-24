@@ -12,13 +12,11 @@ G.O.D is a high performance non-blocking task dispatcher which guarantees class 
 * Simple code-base for easy to understand (easy to adapt to other projects)
 
 ## BRANCHES
-* base_version: this master branch (basic version)
+* base_version: basic version for educational purposes
 * bind_version: std::bind is adopted instead of a custom Job class interface
 * LB_version: load-balancing among worker-threads (new arrival!)
 
-
 ## HOW TO USE 
-
 ```C++
 // First, you can attach G.O.D (AsyncExecutable) to an object like this:
 class TestObject : public AsyncExecutable
@@ -59,11 +57,9 @@ workerService.RunWorkerThreads();
 
 ```
 
-
 For more information, just see self-explaning [DispatcherTest.cpp](JobDispatcher/DispatcherTest.cpp)  
 
 ## WARNING!
-
 1. You should use x64 mode due to std::atomic variable alignment
 2. You should guarantee the lifetime (i.e. AsyncExecutable::mRefCount > 0) of an object inherited from AsyncExecutable
 3. Be careful to use DoAsync(...) in a blockable LOCK (critical section). It can cause deadlock...
