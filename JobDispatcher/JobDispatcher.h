@@ -198,7 +198,7 @@ void DoAsync(T instance, F memfunc, Args&&... args)
 	static_assert(true == is_shared_ptr<T>::value, "T should be shared_ptr");
 	static_assert(true == std::is_convertible<T, std::shared_ptr<AsyncExecutable>>::value, "T should be shared_ptr AsyncExecutable");
 	
-	JobEntry* job = new JobEntry(std::bind(memfunc, instance, std::forward<Args>(args)...));
+	JobEntry* job = new JobEntry(std::bind(memfunc, instance.get(), std::forward<Args>(args)...));
 
 	std::static_pointer_cast<AsyncExecutable>(instance)->DoTask(job);
 } 
@@ -209,6 +209,6 @@ void DoAsyncAfter(uint32_t after, T instance, F memfunc, Args&&... args)
 	static_assert(true == is_shared_ptr<T>::value, "T should be shared_ptr");
 	static_assert(true == std::is_convertible<T, std::shared_ptr<AsyncExecutable>>::value, "T should be shared_ptr AsyncExecutable");
 
-	JobEntry* job = new JobEntry(std::bind(memfunc, instance, std::forward<Args>(args)...));
+	JobEntry* job = new JobEntry(std::bind(memfunc, instance.get(), std::forward<Args>(args)...));
 	LTimer->PushTimerJob(std::static_pointer_cast<AsyncExecutable>(instance), after, job);
 }

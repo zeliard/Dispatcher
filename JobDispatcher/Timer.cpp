@@ -35,7 +35,12 @@ void Timer::DoTimerJob()
 		if (LTickCount < timerJobElem.mExecutionTick )
 			break ;
 
-		timerJobElem.mOwner->DoTask(timerJobElem.mTask); ///< pass to the dispatcher
+		auto owner = timerJobElem.mOwner.lock();
+
+		if (owner != nullptr)
+		{
+			owner->DoTask(timerJobElem.mTask); ///< pass to the dispatcher
+		}
 	
 		mTimerJobQueue.pop();
 	}
