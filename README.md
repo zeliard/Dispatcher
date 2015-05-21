@@ -11,6 +11,12 @@ G.O.D is a high performance non-blocking task dispatcher which guarantees class 
 * Deferred task execution using Timer
 * Simple code-base for easy to understand (easy to adapt to other projects)
 
+## REAL WORLD EXAMPLES
+* [TERA's Lock-Free Executor and Timer](http://download.enmasse.com/documents/201205-gdm-tera.pdf)
+  - Conceptually the same, but G.O.D is a improved version of TERA's.
+* [Mac OS X Grand Central Dispatch (GCD)](http://en.wikipedia.org/wiki/Grand_Central_Dispatch)
+  - G.O.D is a kind of minimal/portable version of GCD
+ 
 ## BRANCHES
 * base_version: basic version for educational purposes
 * bind_version: std::bind is adopted instead of a custom Job class interface (sorry, deprecated!)
