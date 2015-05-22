@@ -56,7 +56,7 @@ struct Job : public JobEntry, ObjectPool<Job<ObjType, ArgTypes...>>
 	typedef std::tuple<ArgTypes...> Args_;
 
 
-	Job(ObjType* obj, MemFunc_ memfunc, ArgTypes... args)
+	Job(ObjType* obj, MemFunc_ memfunc, ArgTypes&&... args)
 		: mObject(obj), mMemFunc(memfunc), mArgs(std::forward<ArgTypes>(args)...)
 	{}
 
