@@ -9,7 +9,7 @@
 
 
 class AsyncExecutable;
-typedef std::weak_ptr<AsyncExecutable> AsyncExecutablePtr;
+typedef std::shared_ptr<AsyncExecutable> AsyncExecutablePtr;
 
 struct TimerJobElement
 {
