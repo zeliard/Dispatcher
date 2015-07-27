@@ -8,6 +8,7 @@
 #include "Job.h"
 #include "Timer.h"
 #include "ThreadLocal.h"
+#include "Runnable.h"
 
 class JobQueue
 {
@@ -178,27 +179,44 @@ private:
 };
 
 
-template <class T>
-struct is_shared_ptr
-{
-	const static bool value = false;
-};
 
 template <class T>
-struct is_shared_ptr<std::shared_ptr<T>>
+class JobDispatcher
 {
-	const static bool value = true;
-};
+public:
+	JobDispatcher(int workerCount) : mWorkerThreadCount(workerCount)
+	{
+		static_assert(true == std::is_convertible<T*, Runnable*>::value, "only allowed when Runnable");
+	}
 
+	void RunWorkerThreads()
+	{
+		for (int i = 0; i < mWorkerThreadCount; ++i)
+		{
+			mWorkerThreadList.emplace_back(std::thread(&T::ThreadRun, std::make_unique<T>()));
+		}
+
+		for (auto& thread : mWorkerThreadList)
+		{
+			if (thread.joinable())
+				thread.join();
+		}
+	}
+
+private:
+
+	int mWorkerThreadCount;
+	std::vector<std::thread> mWorkerThreadList;
+
+};
 
 
 template <class T, class F, class... Args>
 void DoAsync(T instance, F memfunc, Args&&... args)
 { 
-	static_assert(true == is_shared_ptr<T>::value, "T should be shared_ptr");
 	static_assert(true == std::is_convertible<T, std::shared_ptr<AsyncExecutable>>::value, "T should be shared_ptr AsyncExecutable");
 	
-	JobEntry* job = new JobEntry(std::bind(memfunc, instance.get(), std::forward<Args>(args)...));
+	JobEntry* job = new JobEntry(std::bind(memfunc, instance, std::forward<Args>(args)...));
 
 	std::static_pointer_cast<AsyncExecutable>(instance)->DoTask(job);
 } 
@@ -206,9 +224,8 @@ void DoAsync(T instance, F memfunc, Args&&... args)
 template <class T, class F, class... Args>
 void DoAsyncAfter(uint32_t after, T instance, F memfunc, Args&&... args)
 {
-	static_assert(true == is_shared_ptr<T>::value, "T should be shared_ptr");
 	static_assert(true == std::is_convertible<T, std::shared_ptr<AsyncExecutable>>::value, "T should be shared_ptr AsyncExecutable");
 
-	JobEntry* job = new JobEntry(std::bind(memfunc, instance.get(), std::forward<Args>(args)...));
+	JobEntry* job = new JobEntry(std::bind(memfunc, instance, std::forward<Args>(args)...));
 	LTimer->PushTimerJob(std::static_pointer_cast<AsyncExecutable>(instance), after, job);
 }

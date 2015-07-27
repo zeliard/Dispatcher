@@ -13,7 +13,7 @@ typedef std::function<void()> Job;
 
 struct JobEntry : public ObjectPool<JobEntry>
 {
-	JobEntry(const Job& job) : mTask(job) 	{}
+	JobEntry(Job&& job) : mTask(std::move(job)) 	{}
 	virtual ~JobEntry() {}
 	
 	NodeEntry mNodeEntry;
