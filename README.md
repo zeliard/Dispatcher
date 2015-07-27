@@ -19,7 +19,7 @@ G.O.D is a high performance non-blocking task dispatcher which guarantees class 
  
 ## BRANCHES
 * base_version: basic version for educational purposes
-* bind_version: std::bind is adopted instead of a custom Job class interface (sorry, deprecated!)
+* bind_version: std::bind is adopted instead of a custom Job class interface
 * LB_version: load-balancing among worker-threads (new arrival!)
 
 ## HOW TO USE 
