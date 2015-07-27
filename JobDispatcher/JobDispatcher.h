@@ -212,7 +212,7 @@ public:
 	{
 		for (int i = 0; i < mWorkerThreadCount; ++i)
 		{
-			mWorkerThreadList.push_back(std::thread(&T::ThreadRun, std::make_unique<T>(), i));
+			mWorkerThreadList.emplace_back(std::thread(&T::ThreadRun, std::make_unique<T>()));
 		}
 
 		for (auto& thread : mWorkerThreadList)

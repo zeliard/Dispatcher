@@ -4,7 +4,7 @@
 #include "Timer.h"
 #include "JobDispatcher.h"
 
-void Runnable::Initialize(int tid)
+void Runnable::Initialize()
 {
 	LMemoryPool = new LocalMemoryPool;
 	LExecuterList = new ExecuterListType;
@@ -18,9 +18,9 @@ void Runnable::Finalize()
 	delete LMemoryPool;
 }
 
-void Runnable::ThreadRun(int tid)
+void Runnable::ThreadRun()
 {
-	Initialize(tid);
+	Initialize();
 
 	while (true)
 	{

@@ -3,20 +3,15 @@
 class Runnable
 {
 public:
-	Runnable()  {}
-	virtual ~Runnable() {}
+	Runnable() = default;
+	virtual ~Runnable() = default;
 
-	void ThreadRun(int tid);
+	void ThreadRun();
 
 	virtual bool Run() = 0;
 
-	int GetThreadId() { return mThreadId; }
-
 private:
-	void Initialize(int tid);
+	void Initialize();
 	void Finalize();
-
-	int mThreadId;
-
 };
 
