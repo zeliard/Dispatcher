@@ -7,9 +7,9 @@ template <int N>
 struct TupleUnpacker
 {
 	template <class ObjType, class... FuncArgs, class... TupleArgs, class... Args>
-	static void DoExecute(ObjType* obj, void (ObjType::*memfunc)(FuncArgs...), const std::tuple<TupleArgs...>& targ, Args... args)
+	static void DoExecute(ObjType* obj, void (ObjType::*memfunc)(FuncArgs...), const std::tuple<TupleArgs...>& targ, Args&&... args)
 	{
-		TupleUnpacker<N - 1>::DoExecute(obj, memfunc, targ, std::get<N - 1>(targ), args...);
+		TupleUnpacker<N - 1>::DoExecute(obj, memfunc, targ, std::get<N - 1>(targ), std::forward<Args>(args)...);
 	}
 };
 
@@ -17,9 +17,9 @@ template <>
 struct TupleUnpacker<0>
 {
 	template <class ObjType, class... FuncArgs, class... TupleArgs, class... Args>
-	static void DoExecute(ObjType* obj, void (ObjType::*memfunc)(FuncArgs...), const std::tuple<TupleArgs...>& targ, Args... args)
+	static void DoExecute(ObjType* obj, void (ObjType::*memfunc)(FuncArgs...), const std::tuple<TupleArgs...>& targ, Args&&... args)
 	{
-		(obj->*memfunc)(args...);
+		(obj->*memfunc)(std::forward<Args>(args)...);
 	}
 };
 
